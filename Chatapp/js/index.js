@@ -10,7 +10,23 @@ window.onload=()=>{
         measurementId: "G-SXJGWL57JP"
       };
     firebase.initializeApp(firebaseConfig);
-    firebase.analytics();
     console.log(firebase.app().name)
-    view.setActiveScreen('registerScreen')
+    firebase.auth().onAuthStateChanged((res) => {
+      console.log(res)
+      if (res) {
+        if (res.emailVerified) {
+          model.currentUser = {
+            displayName: res.displayName,
+            email: res.email
+          }
+          console.log(model.currentUser)
+          view.setActiveScreen('chatPage')
+        } else {
+          view.setActiveScreen('loginScreen')
+          alert('Please verify your email')
+        }
+      } else {
+        view.setActiveScreen('registerPage')
+      }
+    })
 }
